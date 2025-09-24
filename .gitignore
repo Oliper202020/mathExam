@@ -1,3 +1,4 @@
 /main
-/percentage
+!/percentage
+/percentage/*
 !/percentage/*.c
