@@ -5,11 +5,14 @@ pkgs.mkShell {
     gcc
   ];
   shellHook = ''
-      gcc -o main main.c
-      gcc -o percentage/menu percentage/menu.c
-      gcc -o percentage/momsCalc percentage/momsCalc.c
-      gcc -o square/rootCalc percentage/percentageCalc.c
-      gcc -o square/rootCalc square/rootCalc.c
-      gcc -o square/squareCalc square/squareCalc.c
+    gcc -o myapp \
+      main.c \
+      percentage/menu.c \
+      percentage/percentageCalc.c \
+      percentage/vatCalc.c \
+      square/menu.c \
+      square/rootCalc.c \
+      square/squareCalc.c \
+      -lm
    '';
 }
