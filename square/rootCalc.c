@@ -15,6 +15,6 @@ void root_calc(void) {
         return;
     }
 
-    result = sqrt(x);
+    result = pow(x, 0.5);
     printf("\nthe square root of %g is about %g\n", x, result);
 }
