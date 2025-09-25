@@ -1,13 +1,10 @@
-/* percentage/menu.c – submenu that calls the two calculators directly */
+/* square/menu.c – submenu that calls the two calculators directly */
 #include <stdio.h>
 #include <ctype.h>
 #include <unistd.h>
 #include <termios.h>
-
-/* prototypes of the functions we will call */
-#include "percentageCalc.h"   /* void percentage_calc(void); */
-#include "vatCalc.h"        /* void vat_calc(void); */
-#include "menu.h"            /* declares percentage_menu(void) */
+#include "rootCalc.h"
+#include "squareCalc.h"
 
 /* ------------------------------------------------------------------ */
 static int getch(void) {
@@ -30,9 +27,9 @@ static int getch(void) {
 
 /* ------------------------------------------------------------------ */
 static void show_submenu(void) {
-    printf("\n=== Percentage Menu ===\n");
-    printf("1 – Run percentage calculator\n");
-    printf("2 – Run vat calculator\n");
+    printf("\n=== Square Menu ===\n");
+    printf("1 – Run square calculator\n");
+    printf("2 – Run square root calculator\n");
     printf("R – Return to main menu\n");
     printf("ESC – Exit\n");
     printf("Select an option: ");
@@ -40,7 +37,7 @@ static void show_submenu(void) {
 }
 
 /* ------------------------------------------------------------------ */
-void percentage_menu(void) {          /* public entry point */
+void square_menu(void) {          /* public entry point */
     int running = 1;
     while (running) {
         show_submenu();
@@ -49,10 +46,10 @@ void percentage_menu(void) {          /* public entry point */
 
         switch (toupper(ch)) {
             case '1':
-                percentage_calc();   /* from percentageCalc.c */
+                square_calc();
                 break;
             case '2':
-                vat_calc();         /* from vatCalc.c */
+                root_calc();
                 break;
             case 'R':
                 running = 0;         /* return to caller (main menu) */

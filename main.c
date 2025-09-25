@@ -1,15 +1,15 @@
-/* menu.c – simple console menu (POSIX‑only version)
+/* /main.c – top‑level menu that calls other modules as functions
  *
- * Compile:  gcc -o menu menu.c
+ * Compile (single executable):
+ *   gcc -o myapp main.c \
+ *       percentage/menu.c \
+ *       percentage/percentageCalc.c \
+ *       percentage/momsCalc.c \
+ *       file2.c \
+ *  -lm
  *
- * The program shows a menu:
- *   1 – run file1 (executable ./file1)
- *   2 – run file2 (executable ./file2)
- *   R – return to the menu after a child process ends
- *   ESC – exit
- *
- * Only this file is provided; the other source files (file1.c, file2.c)
- * should be compiled separately to executables named `file1` and `file2`.
+ * Only this file contains `int main(void)`.  All other source files
+ * provide ordinary functions that are linked into the same binary.
  */
 
 #include <stdio.h>
@@ -18,55 +18,71 @@
 #include <unistd.h>
 #include <termios.h>
 
-/* Simple getch implementation for Unix-like systems */
+/* ------------------------------------------------------------------ */
+/* Prototypes of the functions defined in the other source files      */
+#include "percentage/menu.h"      /* declares: void percentage_menu(void); */
+#include "square/menu.h"                /* declares: void apply_factor(void);   */
+
+/* ------------------------------------------------------------------ */
+/* Simple getch implementation for Unix‑like systems */
 static int getch(void) {
     struct termios oldt, newt;
     int ch;
+
     tcgetattr(STDIN_FILENO, &oldt);
     newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);   /* disable buffering and echo */
+    newt.c_lflag &= ~(ICANON | ECHO);
     tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    ch = getchar();
+
+    /* read first non‑newline character */
+    do {
+        ch = getchar();
+    } while (ch == '\n');
+
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
     return ch;
 }
 
-void show_menu(void) {
+
+/* ------------------------------------------------------------------ */
+static void show_menu(void) {
     printf("\n=== Main Menu ===\n");
-    printf("1 – Percentage\n");
-    printf("2 – Run file2\n");
-    printf("R – Return to menu (after a program finishes)\n");
+    printf("1 – Percentage menu\n");
+    printf("2 – Square menu\n");
+    printf("R – Return to menu (after a child process ends)\n");
     printf("ESC – Exit\n");
     printf("Select an option: ");
     fflush(stdout);
 }
 
+/* ------------------------------------------------------------------ */
 int main(void) {
     int running = 1;
     while (running) {
         show_menu();
         int ch = getch();
-
-        /* Echo the pressed key for user feedback */
-        printf("%c\n", ch);
+        printf("%c\n", ch);               /* echo the key */
 
         switch (toupper(ch)) {
             case '1':
-                printf("Launching percentage calculator...\n");
-                (void)system("./percentage/menu");
+                printf("Launching percentage menu...\n");
+                percentage_menu();        /* call submenu directly */
                 break;
+
             case '2':
-                printf("Launching file2...\n");
-                (void)system("./file2");
+                printf("Launching factor calculator...\n");
+                square_menu();           /* call file2's function */
                 break;
+
             case 'R':
-                printf("restarting...\n");
-                /* No action needed – loop will redisplay the menu */
+                /* nothing – loop will redisplay the menu */
                 break;
-            case 27:   /* ESC key ASCII code */
+
+            case 27:   /* ESC */
                 printf("Exiting program.\n");
                 running = 0;
                 break;
+
             default:
                 printf("Invalid choice. Try again.\n");
         }
