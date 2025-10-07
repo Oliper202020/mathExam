@@ -8,6 +8,8 @@
 #include "percentageCalc.h"   /* void percentage_calc(void); */
 #include "vatCalc.h"        /* void vat_calc(void); */
 #include "menu.h"            /* declares percentage_menu(void) */
+#include "wholeFromPartCalc.h"
+#include "partToProcentCalc.h"
 
 /* ------------------------------------------------------------------ */
 static int getch(void) {
@@ -32,7 +34,8 @@ static int getch(void) {
 static void show_submenu(void) {
     printf("\n=== Percentage Menu ===\n");
     printf("1 – Run percentage calculator\n");
-    printf("2 – Run vat calculator\n");
+    printf("2 – Run whole from part calculator\n");
+    printf("4 – Run vat calculator\n");
     printf("R – Return to main menu\n");
     printf("ESC – Exit\n");
     printf("Select an option: ");
@@ -52,6 +55,9 @@ void percentage_menu(void) {          /* public entry point */
                 percentage_calc();   /* from percentageCalc.c */
                 break;
             case '2':
+                wholeFromPartCalc();         /* from vatCalc.c */
+                break;
+            case '3':
                 vat_calc();         /* from vatCalc.c */
                 break;
             case 'R':
